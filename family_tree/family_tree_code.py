@@ -5,16 +5,9 @@ import os
 import concurrent.futures
 
 class FamilyTre:
-    def __init__(self, file_path, directory_path=None):
-        self.file_path = file_path
+    def __init__(self, directory_path=None):
         self.directory_path = directory_path
-        self.family_tree = self.load_json()
-
-    def load_json(self):
-        if self.file_path:
-            with open(self.file_path, 'r') as file:
-                return json.load(file)['lineage']['Members']
-        return None
+        # self.family_tree = self.load_json()
 
     def process_file(self, file_path):
         with open(file_path, 'r') as file:
@@ -27,9 +20,11 @@ class FamilyTre:
         if self.directory_path:
             for filename in os.listdir(self.directory_path):
                 if filename.endswith('.json'):
+                    if filename.startswith('6'):
+                        continue
                     file_path = os.path.join(self.directory_path, filename)
                     processor = FamilyTre(file_path)
-                    lines, names_and_ages, active_period = processor.process_family_tree(processor.family_tree)
+                    lines, names_and_ages, active_period = processor.process_file(file_path)
                     shortest_line = min(lines, key=lambda x: x['duration'])
                     longest_line = max(lines, key=lambda x: x['duration'])
                     ages = [age for _, age in names_and_ages]
@@ -58,8 +53,8 @@ class FamilyTre:
             results = []
             for future in concurrent.futures.as_completed(futures):
                 data = future.result()
-                processed_data = self.process_family_tree(data)
-                results.append(processed_data)
+                # processed_data = self.process_family_tree(data)
+                results.append(data)
 
         return results
 
@@ -120,13 +115,8 @@ class FamilyTre:
 
     def generate_name_by_depth_and_order(self, depth, order):
         """Generates a name based on the depth and order."""
-        # Base names for depth levels
         base_names = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"]
-
-        # Select the base name based on depth (cycling through the list if depth exceeds the length)
         base_name = base_names[(depth - 1) % len(base_names)]
-
-        # Append hyphens or pluses based on order
         suffix = "-" * order if order % 2 == 0 else "+" * order
         return base_name + suffix
 
@@ -134,22 +124,24 @@ class FamilyTre:
         """Generates a family member with descendants, naming based on depth and order."""
         if current_depth > max_depth:
             return None
+        birth_year = self.generate_random_year(start_year, end_year)
+        death_year = self.generate_random_year(birth_year, end_year)
 
         member = {
             'Name': self.generate_name_by_depth_and_order(current_depth, order),
-            'BirthYear': self.generate_random_year(start_year, end_year),
-            'DeathYear': self.generate_random_year(start_year, end_year)
+            'BirthYear': birth_year,
+            'DeathYear': death_year
         }
 
         # Generate descendants recursively
         if current_depth < max_depth:
             member['Members'] = [
-                self.generate_member_by_depth_and_order(start_year, end_year, max_depth, current_depth + 1, i) for i in
-                range(1, random.randint(2, 4))]
+                self.generate_member_by_depth_and_order(birth_year + 1, end_year, max_depth, current_depth + 1, i)
+                for i in range(1, random.randint(2, 4))]
 
         return member
 
-    def generate_lineage_json_by_depth_and_order(self, max_depth=3, start_year=1800, end_year=2023):
+    def generate_lineage_json_by_depth_and_order(self, max_depth=3, start_year=1800, end_year=2023, input_file_name=1):
         """Generates a random family lineage as a JSON structure with names based on depth and order."""
         lineage = {
             'lineage': {
@@ -158,34 +150,48 @@ class FamilyTre:
                             range(random.randint(1, 3))]
             }
         }
-        return json.dumps(lineage, indent=4)
 
+        output_file_name = f'{input_file_name}.json'
+        output_file_path = f'generate_input_files/{output_file_name}'
+        self.save_output(lineage, output_file_path)
 
+#Code to generate random data
+n = 10
+for i in range(1, n + 1):
+    processor = FamilyTre(directory_path='generate_input_files')
+    output_data_json = processor.generate_lineage_json_by_depth_and_order(input_file_name=i)
 
-# For one single json file
-processor = FamilyTre('family_tree.json')
-lines, names_and_ages, active_period = processor.process_family_tree(processor.family_tree)
+# For given json file
+
+processor = FamilyTre()
+lines, names_and_ages, active_period = processor.process_file(file_path='family_tree.json')
 shortest_line = min(lines, key=lambda x: x['duration'])
 longest_line = max(lines, key=lambda x: x['duration'])
 sorted_names_and_ages = sorted(names_and_ages, key=lambda x: x[1])
 ages = [age for _, age in names_and_ages]
 mean_age = statistics.mean(ages)
 median_age = statistics.median(ages)
-print(lines, names_and_ages, active_period)
+print(f"Lines: {lines}")
+print(f"Names and ages: {names_and_ages}")
+print(f"Active period: {active_period}")
+print(f"Shortest line: {shortest_line}")
+print(f"Longest line: {longest_line}")
+print(f"Sorted names and ages: {sorted_names_and_ages}")
+print(f"Mean age: {mean_age}")
+print(f"Median age: {median_age}")
 
 
-#For files in directory
-directory_path = 'path/to/your/directory'  # Replace with your directory path
+# For files in directory
+directory_path = 'generate_input_files'  # Replace with your directory path
 processor = FamilyTre(directory_path=directory_path)  # Initializing without a specific family tree
 processor.process_all_files()
 
 
-
 #Process in thread pool
-directory_path = 'path/to/your/directory'  # Replace with your directory path
+directory_path = 'generate_input_files'  # Replace with your directory path
 processor = FamilyTre(directory_path=directory_path)
 # pool_size = int(input("Enter pool size: "))
-for pool_size in [1, 2, 5]:
+for pool_size in [5]:
     print(f"Testing with pool size: {pool_size}")
     results = processor.process_files_in_directory(directory_path, pool_size)
     for result in results:
