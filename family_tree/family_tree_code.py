@@ -20,8 +20,6 @@ class FamilyTre:
         if self.directory_path:
             for filename in os.listdir(self.directory_path):
                 if filename.endswith('.json'):
-                    if filename.startswith('6'):
-                        continue
                     file_path = os.path.join(self.directory_path, filename)
                     processor = FamilyTre(file_path)
                     lines, names_and_ages, active_period = processor.process_file(file_path)
