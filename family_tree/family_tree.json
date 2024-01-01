@@ -1,0 +1,111 @@
+{
+    "lineage": {
+        "FamilyTree": "Some Family Tree",
+        "Members": [{
+                "Name": "First-",
+                "BirthYear": "1221",
+                "DeathYear": "1264",
+                "Members": [{
+                        "Name": "Second-",
+                        "BirthYear": "1245",
+                        "DeathYear": "1300",
+                        "Members": [{
+                                "Name": "Third-",
+                                "BirthYear": "1270",
+                                "DeathYear": "1333"
+                            },
+                            {
+                                "Name": "Third--",
+                                "BirthYear": "1272",
+                                "DeathYear": "1300"
+                            },
+                            {
+                                "Name": "Third--",
+                                "BirthYear": "1272",
+                                "DeathYear": "1340"
+                            },
+                            {
+                                "Name": "Third---",
+                                "BirthYear": "1274",
+                                "DeathYear": "1343"
+                            }
+                        ]
+                    },
+                    {
+                        "Name": "Second--",
+                        "BirthYear": "1248",
+                        "DeathYear": "1310",
+                        "Members": [{
+                                "Name": "Third-/",
+                                "BirthYear": "1274",
+                                "DeathYear": "1330"
+                            },
+                            {
+                                "Name": "Third-//",
+                                "BirthYear": "1276",
+                                "DeathYear": "1312"
+                            },
+                            {
+                                "Name": "Third-///",
+                                "BirthYear": "1276",
+                                "DeathYear": "1344"
+                            },
+                            {
+                                "Name": "Third-////",
+                                "BirthYear": "1278",
+                                "DeathYear": "1352"
+                            },
+                            {
+                                "Name": "Third-/////",
+                                "BirthYear": "1278",
+                                "DeathYear": "1268"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "Name": "First--",
+                "BirthYear": "1212",
+                "DeathYear": "1260",
+                "Members": [{
+                        "Name": "Second+",
+                        "BirthYear": "1243",
+                        "DeathYear": "1312"
+                    },
+                    {
+                        "Name": "Second++",
+                        "BirthYear": "1245",
+                        "DeathYear": "1274",
+                        "Members": [{
+                                "Name": "Third+/",
+                                "BirthYear": "1274",
+                                "DeathYear": "1330"
+                            },
+                            {
+                                "Name": "Third+//",
+                                "BirthYear": "1276",
+                                "DeathYear": "1312"
+                            },
+                            {
+                                "Name": "Third+///",
+                                "BirthYear": "1250",
+                                "DeathYear": "1344"
+                            },
+                            {
+                                "Name": "Third+////",
+                                "BirthYear": "1278",
+                                "DeathYear": "1352"
+                            }
+                        ]
+                    },
+                    {
+                        "Name": "Second++",
+                        "BirthYear": "1243",
+                        "DeathYear": "1260"
+                    }
+                ]
+            }
+        ]
+    }
+}
